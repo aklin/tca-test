@@ -9,6 +9,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 // core components
 import styles from 'assets/jss/material-dashboard-react/components/tableStyle.js';
+import classnames from 'classnames';
 
 const useStyles = makeStyles(styles);
 
@@ -24,7 +25,7 @@ export default function CustomTable(props) {
 							{tableHead.map((prop, key) => {
 								return (
 									<TableCell
-										className={classes.tableCell + ' ' + classes.tableHeadCell}
+										className={classnames(classes.tableCell, classes.tableHeadCell)}
 										key={key}
 									>
 										{prop}
