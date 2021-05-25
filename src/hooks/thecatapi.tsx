@@ -19,6 +19,17 @@ const GET = {
 	method: 'GET',
 	headers: commonHeaders,
 };
+/*
+const POST={
+	method: 'POST',
+	headers: commonHeaders,
+}
+
+const DELETE={
+	method: 'DELETE',
+	headers: commonHeaders,
+}
+*/
 
 export interface AppSecret {
 	name: string;
@@ -57,3 +68,12 @@ export const getMyCatPics=async (page=1, limit=16) =>
 
 export const getSearchCatPics=async(limit=16) =>
 	await fetch(`${url}/images/search?limit=${limit}`, GET)
+
+export const getFavouriteCatPics=async(limit=16) =>
+	await fetch(`${url}/favourites`, GET)
+
+export const setFavourite = async (id: string, favourite: boolean) => {
+	const method = favourite ? 'POST' : 'DELETE';
+
+	return await fetch(`${url}/`, { headers: commonHeaders, method, body: JSON.stringify({ id }) });
+};

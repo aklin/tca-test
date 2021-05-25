@@ -5,15 +5,12 @@ import PetsIcon from '@material-ui/icons/Pets';
 import PublishIcon from '@material-ui/icons/Publish';
 import ThumbUpIcon from '@material-ui/icons/ThumbUp';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import { makeStyles } from '@material-ui/core/styles';
 // @material-ui/icons
 // core components
-import styles from 'assets/jss/material-dashboard-react/views/dashboardStyle.js';
 import MyCats from '../../components/MyCats';
 import Tabs from '../../components/CustomTabs/CustomTabs.js';
 import SearchCats from '../../components/SearchCats';
 
-const useStyles = makeStyles(styles);
 
 export default function Dashboard() {
 	return (

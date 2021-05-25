@@ -19,15 +19,15 @@ const useStyles = makeStyles(styles);
 
 export default function CustomTabs(props) {
 	const [value, setValue] = useState(0);
-	const [windowWidth, setWindowWidth] = useState(window.innerWidth)
+	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 	const handleChange = (event, value) => {
 		setValue(value);
 	};
 
 	React.useEffect(() => {
-		const handleResize =() => setWindowWidth(window.innerWidth)
-		window.addEventListener('resize', handleResize)
-	})
+		const handleResize = () => setWindowWidth(window.innerWidth);
+		window.addEventListener('resize', handleResize);
+	});
 
 	const classes = useStyles();
 	const { headerColor, plainTabs, tabs, title, rtlActive } = props;
