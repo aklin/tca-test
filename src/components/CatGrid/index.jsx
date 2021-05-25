@@ -1,6 +1,6 @@
 import GridContainer from '../Grid/GridContainer';
 import Card from '../Card/Card';
-import { CardActions, CardContent, CardMedia, Typography } from '@material-ui/core';
+import { CardActions, CardContent, CardMedia, CircularProgress, Typography } from '@material-ui/core';
 import GridItem from '../Grid/GridItem';
 import { Dimensions } from '../../util';
 import { makeStyles } from '@material-ui/core/styles';
@@ -19,39 +19,40 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function CatGrid({ total = 0, items = [] }) {
+export default function CatGrid({ total = 0, items = [], loading=true }) {
 const classes=useStyles();
 	console.log(items)
 
 	return (
-		<GridContainer>
-			{items.map(({ id, url, name, height, width }) => (
-				<GridItem {...Dimensions}>
-					<Card key={id}>
-						<CardMedia
-							className={classes.media}
-							height={`${height}px`}
-							width={`${width}px`}
-							image={url}
-							title={name}
-						/>
-						<CardContent>
-							{name}
-						</CardContent>
-						<CardActions disableSpacing>
-							<IconButton aria-label="add to favorites">
-								<FavoriteIcon />
-							</IconButton>
-							<IconButton aria-label="share">
-								<ShareIcon />
-							</IconButton>
-						</CardActions>
-					</Card>
-				</GridItem>
-			))}
+<>
+	<Typography variant={'muted'}>Total entries: {total}</Typography>
+	<GridContainer>
+		{loading && <GridItem {...Dimensions}><CircularProgress size={120} /></GridItem>}
+		{items.map(({ id, url, name, height, width }) => (
 			<GridItem {...Dimensions}>
-				<Typography variant={'caption'}>Total entries: {total}</Typography>
+				<Card key={id}>
+					<CardMedia
+						className={classes.media}
+						height={`${height}px`}
+						width={`${width}px`}
+						image={url}
+						title={name}
+					/>
+					<CardContent>
+						{name}
+					</CardContent>
+					<CardActions disableSpacing>
+						<IconButton aria-label="add to favorites">
+							<FavoriteIcon />
+						</IconButton>
+						<IconButton aria-label="share">
+							<ShareIcon />
+						</IconButton>
+					</CardActions>
+				</Card>
 			</GridItem>
-		</GridContainer>
+		))}
+	</GridContainer>
+</>
 	);
 }

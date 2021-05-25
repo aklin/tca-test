@@ -8,6 +8,7 @@ import CatGrid from '../CatGrid';
 import { Dimensions } from '../../util';
 
 export default function SearchCats() {
+	const [loading, setLoading]=useState(true);
 	const [items, setItems] = useState([]);
 	const [totalItems, setTotalItems] = useState(0);
 
@@ -23,17 +24,15 @@ export default function SearchCats() {
 			setItems(await response.json());
 		};
 
-		get();
+		try{
+			setLoading(true)
+			get();
+		}finally {
+			setLoading(false)
+		}
 	}, []);
 
 	return (
-		<>
-			<GridContainer>
-				<GridItem {...Dimensions}>
-					<Typography variant={'h4'}>All Cats</Typography>
-				</GridItem>
-			</GridContainer>
-			<CatGrid items={items} total={totalItems} />
-		</>
+		<CatGrid items={items} total={totalItems} loading={loading} />
 	);
 }
