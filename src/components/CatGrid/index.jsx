@@ -1,51 +1,49 @@
 import GridContainer from '../Grid/GridContainer';
-import { useEffect, useState } from 'react';
-import { getCatPics } from '../../hooks/thecatapi';
 import Card from '../Card/Card';
-import { CardMedia, Typography } from '@material-ui/core';
+import { CardActions, CardContent, CardMedia, Typography } from '@material-ui/core';
 import GridItem from '../Grid/GridItem';
+import { Dimensions } from '../../util';
+import { makeStyles } from '@material-ui/core/styles';
 
-const dimensions={
-	xs:12,
-	sm:6,
-	md:3,
-}
-
-export default function CatGrid({title}){
-	const [items,setItems]=useState([]);
-	const [totalItems, setTotalItems]=useState(0);
-
-	useEffect(()=> {
-		const get = async () => {
-			const response = await getCatPics();
-
-			if (!response.ok) {
-				console.error(response);
-				return;
-			}
-			setItems(await response.json());
-		};
+const useStyles = makeStyles((theme) => ({
+	root: {
+		maxWidth: 345,
+	},
+	media: {
+		height: 0,
+		paddingTop: '56.25%', // 16:9
+	},
+}));
 
 
-		get();
+export default function CatGrid({ total = 0, items = [] }) {
+const classes=useStyles();
+	console.log(items)
 
-	}, [])
-
-	return(
-		<>
-			<GridContainer>
-				<GridItem {...dimensions}>
-					<Typography variant={'h4'} >{title}</Typography>
+	return (
+		<GridContainer>
+			{items.map(({ id, url, name, height, width }) => (
+				<GridItem {...Dimensions}>
+					<Card key={id}>
+						<CardMedia
+							className={classes.media}
+							height={`${height}px`}
+							width={`${width}px`}
+							image={url}
+							title={name}
+						/>
+						<CardContent>
+							{name}
+						</CardContent>
+						<CardActions>
+							actions
+						</CardActions>
+					</Card>
 				</GridItem>
-			</GridContainer>
-			<GridContainer>
-				{items.map(({id, url, original_filename})=><Card key={id}>
-					<CardMedia image={url} title={original_filename} />
-				</Card>)}
-				<GridItem {...dimensions}>
-					<Typography variant={'caption'} >Total entries: {totalItems}</Typography>
-				</GridItem>
-			</GridContainer>
-		</>
-	)
+			))}
+			<GridItem {...Dimensions}>
+				<Typography variant={'caption'}>Total entries: {total}</Typography>
+			</GridItem>
+		</GridContainer>
+	);
 }

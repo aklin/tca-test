@@ -40,14 +40,13 @@ const switchRoutes = (
 const useStyles = makeStyles(styles);
 
 export default function Admin({ ...rest }) {
-
 	// styles
 	const classes = useStyles();
 	// ref to help us initialize PerfectScrollbar on windows devices
 	const mainPanel = React.createRef();
 	// states and functions
-	const image=bgImage
-	const color='blue'
+	const image = bgImage;
+	const color = 'blue';
 	const [mobileOpen, setMobileOpen] = React.useState(false);
 	const handleDrawerToggle = () => {
 		setMobileOpen(!mobileOpen);
