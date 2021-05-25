@@ -25,7 +25,4 @@ import { createBrowserHistory } from 'history';
 
 const hist = createBrowserHistory();
 
-ReactDOM.render(
-	<App hist={hist} />,
-	document.getElementById('root'),
-);
+ReactDOM.render(<App hist={hist} />, document.getElementById('root'));
