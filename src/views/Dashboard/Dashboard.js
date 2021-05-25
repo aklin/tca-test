@@ -11,7 +11,6 @@ import SearchCats from '../../components/SearchCats';
 const useStyles = makeStyles(styles);
 
 export default function Dashboard() {
-	const classes = useStyles();
 	return (
 		<div>
 			<MyCats />

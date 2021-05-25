@@ -17,12 +17,10 @@
 */
 // @material-ui/icons
 import Dashboard from '@material-ui/icons/Dashboard';
-import Person from '@material-ui/icons/Person';
-import Notifications from '@material-ui/icons/Notifications';
+import PublishIcon from '@material-ui/icons/Publish';
 // core components/views for Admin layout
 import DashboardPage from 'views/Dashboard/Dashboard.js';
 import UserProfile from 'views/UserProfile/UserProfile.js';
-import NotificationsPage from 'views/Notifications/Notifications.js';
 // core components/views for RTL layout
 
 const dashboardRoutes = [
@@ -34,17 +32,10 @@ const dashboardRoutes = [
 		layout: '/admin',
 	},
 	{
-		path: '/mycats',
-		name: 'My Cats',
-		icon: Person,
+		path: '/upload',
+		name: 'Upload',
+		icon: PublishIcon,
 		component: UserProfile,
-		layout: '/admin',
-	},
-	{
-		path: '/notifications',
-		name: 'Notifications',
-		icon: Notifications,
-		component: NotificationsPage,
 		layout: '/admin',
 	},
 ];
