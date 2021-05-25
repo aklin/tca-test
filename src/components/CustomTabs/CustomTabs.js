@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 // nodejs library that concatenates classes
 import classNames from 'classnames';
 // nodejs library to set properties for components
@@ -18,10 +18,17 @@ import styles from 'assets/jss/material-dashboard-react/components/customTabsSty
 const useStyles = makeStyles(styles);
 
 export default function CustomTabs(props) {
-	const [value, setValue] = React.useState(0);
+	const [value, setValue] = useState(0);
+	const [windowWidth, setWindowWidth] = useState(window.innerWidth)
 	const handleChange = (event, value) => {
 		setValue(value);
 	};
+
+	React.useEffect(() => {
+		const handleResize =() => setWindowWidth(window.innerWidth)
+		window.addEventListener('resize', handleResize)
+	})
+
 	const classes = useStyles();
 	const { headerColor, plainTabs, tabs, title, rtlActive } = props;
 	const cardTitle = classNames({
@@ -58,7 +65,7 @@ export default function CustomTabs(props) {
 									wrapper: classes.tabWrapper,
 								}}
 								key={key}
-								label={prop.tabName}
+								label={windowWidth >= 960 ? prop.tabName : undefined}
 								{...icon}
 							/>
 						);
