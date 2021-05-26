@@ -66,6 +66,12 @@ export const searchBreedsByName = async (name: string) =>
 export const getMyCatPics=async (page=1, limit=16) =>
 	await fetch(`${url}/images?page=${page}&limit=${limit}`, GET)
 
+export const getCatById=async(image_id:string)=>
+	await fetch(`${url}/images/${image_id}`, GET)
+
+export const getMyVotes = async(page=1, limit=16) =>
+	await fetch(`${url}/votes?page=${page}&limit=${limit}`, GET)
+
 export const getSearchCatPics=async(limit=16) =>
 	await fetch(`${url}/images/search?limit=${limit}`, GET)
 

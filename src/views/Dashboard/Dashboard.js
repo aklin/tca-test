@@ -10,6 +10,8 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import MyCats from '../../components/MyCats';
 import Tabs from '../../components/CustomTabs/CustomTabs.js';
 import SearchCats from '../../components/SearchCats';
+import FavouriteCats from '../../components/FavouriteCats';
+import Votes from '../../components/Votes';
 
 
 export default function Dashboard() {
@@ -31,12 +33,12 @@ export default function Dashboard() {
 							{
 								tabName: 'My favourites',
 								tabIcon:FavoriteIcon,
-								tabContent: <div />,
+								tabContent: <FavouriteCats />,
 							},
 							{
 								tabName: 'My votes',
 								tabIcon:ThumbUpIcon,
-								tabContent: <div />,
+								tabContent: <Votes />,
 							},
 						]}
 			/>

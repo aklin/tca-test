@@ -16,18 +16,18 @@
 
 */
 // @material-ui/icons
-import Dashboard from '@material-ui/icons/Dashboard';
+import PetsIcon from '@material-ui/icons/Pets';
 import PublishIcon from '@material-ui/icons/Publish';
 // core components/views for Admin layout
 import DashboardPage from 'views/Dashboard/Dashboard.js';
-import UserProfile from 'views/UserProfile/UserProfile.js';
+import UploadView from './views/Upload/UploadView';
 // core components/views for RTL layout
 
 const dashboardRoutes = [
 	{
 		path: '/dashboard',
 		name: 'Dashboard',
-		icon: Dashboard,
+		icon: PetsIcon,
 		component: DashboardPage,
 		layout: '/admin',
 	},
@@ -35,7 +35,7 @@ const dashboardRoutes = [
 		path: '/upload',
 		name: 'Upload',
 		icon: PublishIcon,
-		component: UserProfile,
+		component: UploadView,
 		layout: '/admin',
 	},
 ];
