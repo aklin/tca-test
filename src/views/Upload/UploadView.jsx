@@ -29,7 +29,6 @@ const dim = {
 export default function UploadView() {
 	const classes = useStyles();
 	const [form, setForm] = useState({});
-	const [blocked, setBlocked] = useState(false);
 
 	const handleUpload = async () => {
 		/*
@@ -42,10 +41,9 @@ url: "https://cdn2.thecatapi.com/images/rYjZNfyyI.jpg"
 width: 1280
 		 */
 		try {
-			setBlocked(true);
 			await postPicture(form);
 		} finally {
-			setBlocked(false);
+			// setBlocked(false);
 		}
 	};
 
