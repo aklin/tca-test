@@ -1,5 +1,5 @@
 import { createContext, useContext, useReducer } from 'react';
-import { CatBreed, getBreeds, getFavouriteCatPics, getMyVotes } from './thecatapi';
+import { CatBreed, getFavouriteCatPics, getMyVotes } from './thecatapi';
 
 const initialState = {};
 
@@ -12,6 +12,7 @@ export const Actions = {
 	FETCH_FAVOURITES:'FETCH_FAVOURITES',
 	FETCH_VOTES:'FETCH_VOTES',
 	FETCH_FAVS_AND_VOTES:'FETCH_VOTES',
+	FETCH_CATS:'FETCH_CATS',
 };
 
 export interface ReducerAction {
@@ -25,13 +26,19 @@ const consolidate = (items:any[], prefix:string):object =>
 
 
 const calcVotes = (items:any[]):object =>
-	items.map(({image_id, value}) => ({image_id, value: value !=1 ? -1 : 1}))
+	items.map(({image_id, value}) => ({image_id, value: value !==1 ? -1 : 1}))
 
 
 const reducer = async (state: any, { type, data }: ReducerAction) => {
 	let request;
 	let newState = state;
 	switch (type) {
+		case Actions.FETCH_CATS:
+			request = await getFavouriteCatPics();
+			if (!request.ok) {
+				console.error(`Request failed ${type}`);
+			}
+			break;
 		case Actions.FETCH_FAVS_AND_VOTES:
 			const r1=await (await getMyVotes()).json()
 			const r2=await (await getFavouriteCatPics()).json()
