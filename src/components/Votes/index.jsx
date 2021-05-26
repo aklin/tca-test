@@ -1,4 +1,4 @@
-import { getMyCatPics, getMyVotes } from '../../hooks/thecatapi';
+import { getMyVotes } from '../../hooks/thecatapi';
 import CatGrid from '../CatGrid';
 import useCats from '../../hooks/cathook';
 

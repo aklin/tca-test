@@ -3,6 +3,18 @@ import { CircularProgress, Typography } from '@material-ui/core';
 import GridItem from '../Grid/GridItem';
 import { Dimensions } from '../../util';
 import CatItem from '../CatItem';
+import { useContext, useEffect } from 'react';
+import { Actions, StoreContext } from '../../hooks/store';
+
+
+const calcVotes = (image_id_param, state) =>{
+	const activeVotes = Object.keys(state)
+		.filter((key) => key.indexOf('vote_')> -1)
+		.map(key => state[key][key])
+		.filter(({image_id, value}) => image_id === image_id_param)
+
+
+}
 
 export default function CatGrid({
 	total = 0,
@@ -10,6 +22,16 @@ export default function CatGrid({
 	image_ids = [],
 	loading = true,
 }) {
+
+	const {store, dispatch} =useContext(StoreContext)
+
+	useEffect(()=>{
+		dispatch({type: Actions.FETCH_FAVS_AND_VOTES})
+		// dispatch({type: Actions.FETCH_VOTES})
+	}, [])
+
+	console.log(store)
+
 	return (
 		<>
 			<Typography variant={'muted'}>Total entries: {total}</Typography>
