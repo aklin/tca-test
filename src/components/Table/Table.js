@@ -10,12 +10,20 @@ import TableCell from '@material-ui/core/TableCell';
 // core components
 import styles from 'assets/jss/material-dashboard-react/components/tableStyle.js';
 import classnames from 'classnames';
+import Pagination from '@material-ui/lab/Pagination';
 
 const useStyles = makeStyles(styles);
 
-export default function CustomTable(props) {
+export default function CustomTable({
+	tableHead,
+	tableData,
+	tableHeaderColor,
+	count,
+	onChangePage,
+	page,
+	rowsPerPage,
+}) {
 	const classes = useStyles();
-	const { tableHead, tableData, tableHeaderColor } = props;
 	return (
 		<div className={classes.tableResponsive}>
 			<Table className={classes.table}>
@@ -25,7 +33,10 @@ export default function CustomTable(props) {
 							{tableHead.map((prop, key) => {
 								return (
 									<TableCell
-										className={classnames(classes.tableCell, classes.tableHeadCell)}
+										className={classnames(
+											classes.tableCell,
+											classes.tableHeadCell
+										)}
 										key={key}
 									>
 										{prop}
@@ -51,6 +62,14 @@ export default function CustomTable(props) {
 					})}
 				</TableBody>
 			</Table>
+			{page !== undefined && (
+				<Pagination
+					count={count}
+					onChange={onChangePage}
+					page={page}
+					rowsPerPage={rowsPerPage}
+				/>
+			)}
 		</div>
 	);
 }
@@ -70,5 +89,7 @@ CustomTable.propTypes = {
 		'gray',
 	]),
 	tableHead: PropTypes.arrayOf(PropTypes.string),
-	tableData: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
+	tableData: PropTypes.arrayOf(
+		PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.number]))
+	),
 };

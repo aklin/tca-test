@@ -17,7 +17,7 @@ const useStyles = makeStyles(styles);
 export default function CustomInput(props) {
 	const classes = useStyles();
 	const {
-		formControlProps,
+		formControlProps={fullWidth:true},
 		labelText,
 		id,
 		labelProps,
