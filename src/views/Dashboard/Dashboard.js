@@ -13,34 +13,34 @@ import SearchCats from '../../components/SearchCats';
 import FavouriteCats from '../../components/FavouriteCats';
 import Votes from '../../components/Votes';
 
-
 export default function Dashboard() {
 	return (
 		<div>
-			<Tabs title={'Cats and Kittens'}
-						headerColor={'info'}
-						tabs={[
-							{
-								tabName: 'Browse',
-								tabIcon:PetsIcon,
-								tabContent: <SearchCats />,
-							},
-							{
-								tabName: 'My uploads',
-								tabIcon: PublishIcon,
-								tabContent: <MyCats />,
-							},
-							{
-								tabName: 'My favourites',
-								tabIcon:FavoriteIcon,
-								tabContent: <FavouriteCats />,
-							},
-							{
-								tabName: 'My votes',
-								tabIcon:ThumbUpIcon,
-								tabContent: <Votes />,
-							},
-						]}
+			<Tabs
+				title={'Cats and Kittens'}
+				headerColor={'info'}
+				tabs={[
+					{
+						tabName: 'Browse',
+						tabIcon: PetsIcon,
+						tabContent: <SearchCats />,
+					},
+					{
+						tabName: 'My uploads',
+						tabIcon: PublishIcon,
+						tabContent: <MyCats />,
+					},
+					{
+						tabName: 'My favourites',
+						tabIcon: FavoriteIcon,
+						tabContent: <FavouriteCats />,
+					},
+					{
+						tabName: 'My votes',
+						tabIcon: ThumbUpIcon,
+						tabContent: <Votes />,
+					},
+				]}
 			/>
 		</div>
 	);

@@ -5,10 +5,10 @@ import React from 'react';
 export default function App({ hist }: any) {
 	return (
 		<BrowserRouter>
-				<Switch>
-					<Route path="/admin" component={Admin} />
-					<Redirect from="/" to="/admin/dashboard" />
-				</Switch>
+			<Switch>
+				<Route path="/admin" component={Admin} />
+				<Redirect from="/" to="/admin/dashboard" />
+			</Switch>
 		</BrowserRouter>
 	);
 }

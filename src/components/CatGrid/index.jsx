@@ -7,7 +7,7 @@ import CatItem from '../CatItem';
 export default function CatGrid({
 	total = 0,
 	items = [],
-	image_ids=[],
+	image_ids = [],
 	loading = true,
 }) {
 	return (
