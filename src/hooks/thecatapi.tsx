@@ -12,7 +12,7 @@ if (!apiKey) {
 
 const commonHeaders: HeadersInit = new Headers();
 
-commonHeaders.set('Content-Type', 'application.json');
+commonHeaders.set('Content-Type', 'application/json');
 commonHeaders.set('X-Api-Key', apiKey || '');
 
 const GET = {
@@ -91,13 +91,12 @@ export const postPicture = async (form: IUploadPicture) => {
 };
 
 export const postVote = async (image_id: string, vote: boolean) =>
-	await fetch(`${url}/votes`, {
-		headers: commonHeaders,
-		method: 'POST',
-		body: JSON.stringify({ image_id, vote, sub_id: '' }),
+	await fetch(`${url}/votes/`, {
+		...POST,
+		body: JSON.stringify({ image_id, value:vote }),
 	});
 
-export const getMyVotes = async (page = 1, limit = 16) =>
+export const getMyVotes = async (page = 0, limit = 16) =>
 	await fetch(`${url}/votes?page=${page}&limit=${limit}`, GET);
 
 export const getSearchCatPics = async (limit = 16) =>
@@ -109,7 +108,7 @@ export const getFavouriteCatPics = async (limit = 16) =>
 export const setFavourite = async (id: string, favourite: boolean) => {
 	// const method = favourite ? 'POST' : 'DELETE';
 
-	return await fetch(`${url}/favourites`, {
+	return await fetch(`${url}/favourites/`, {
 		...POST,
 		body: JSON.stringify({ image_id:	id }),
 	});

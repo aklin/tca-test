@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export default function CatItem({ item, image_id }) {
+export default function CatItem({ item={}, image_id }) {
 	const classes = useStyles();
 
 	/*
@@ -42,10 +42,10 @@ export default function CatItem({ item, image_id }) {
 	const { items, loading } = useCats(async () =>
 		image_id
 			? await getCatById(image_id)
-			: await { items: item, loading: false }
+			: { items: item, loading: false }
 	);
 	const { name, id, url, height, width, categories = [], breeds = [] } =
-		item || items;
+		(item.url ? item : item.image) || items;
 
 	const castVote = async (voteUp) => {
 		await postVote(id, voteUp);
