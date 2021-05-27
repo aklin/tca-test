@@ -1,18 +1,18 @@
-import { getMyVotes } from '../../hooks/thecatapi';
+import { actionLoadVotes } from '../../hooks/thecatapi';
 import CatGrid from '../CatGrid';
-import useCats from '../../hooks/cathook';
+import { useContext, useEffect } from 'react';
+import { StoreContext } from '../../hooks/store';
 
 export default function Votes() {
-	const { items = [], totalItems, loading } = useCats(getMyVotes);
+	const { state, dispatch } = useContext(StoreContext);
+	const ids = Object.keys(state)
+		.map((id) => ({ id, score: state[id].score }))
+		.filter(({ score }) => score !== undefined)
+		.map(({ id }) => id);
 
-	console.log(items);
-	console.log(totalItems);
+	useEffect(() => {
+		actionLoadVotes(dispatch);
+	}, []);
 
-	return (
-		<CatGrid
-			image_ids={items.map(({ image_id }) => image_id)}
-			total={totalItems}
-			loading={loading}
-		/>
-	);
+	return <CatGrid image_ids={ids} total={ids.length} />;
 }

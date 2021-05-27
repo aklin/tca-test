@@ -76,12 +76,11 @@ const indexCats = (items: any[]): object =>
 			newState = deepmerge(
 				state,
 				indexCats(
-					data.map(({ value, image_id, ...rest }: VoteI) => {
+					data.map(({ value, image_id }: VoteI) => {
 						const old = state[image_id] as MergedCatI;
 						return {
-							...rest,
 							id: image_id,
-							score: (old.score || 0) + value ? 1 : -1,
+							score: (old?.score || 0) + value ? 1 : -1,
 						};
 					})
 				)

@@ -138,8 +138,6 @@ export const actionLoadVotes = async (dispatch: Dispatch<any>) => {
 		return;
 	}
 
-	const votes: VoteI[] = await request.json();
-
 	dispatch({ type: Actions.SAVE_VOTES, data: await request.json() });
 
 	return request.headers.get('Pagination-Count');

@@ -11,7 +11,7 @@ export default function FavouriteBtn({
 	return (
 		<IconButton
 			color={set ? 'rose' : undefined}
-			aria-label={'vote up'}
+			aria-label={'Set/unset favourite'}
 			onClick={() => onClick(!set)}
 			{...props}
 		>
