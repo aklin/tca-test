@@ -1,5 +1,5 @@
 import { createContext, Dispatch, useContext, useReducer } from 'react';
-import { CatBreed } from './thecatapi';
+import { CatI, FavouriteI, MergedCatI, VoteI } from './thecatapi';
 import deepmerge from 'deepmerge';
 
 const initialState = {};
@@ -28,33 +28,6 @@ interface State {
 	[index: string]: object;
 }
 
-interface CategoryI {
-	id: number;
-	name: string;
-}
-
-export interface MergedCatI extends CatI {
-	favourite?: boolean;
-	score?: number;
-}
-
-interface CatI {
-	id: string;
-	url: URL;
-	width: number;
-	height: number;
-	categories?: CategoryI[];
-}
-
-interface VoteI {
-	value: number;
-	image_id: string;
-}
-
-interface FavouriteI {
-	image_id: string;
-}
-
 export interface ReducerAction {
 	type: ReducerActionName;
 	data: any | undefined;
@@ -66,7 +39,7 @@ export interface ReducerAction {
  */
 const indexCats = (items: any[]): object =>
 	items
-		.map(({ id, ...rest }: CatBreed) => ({ [id]: { id, ...rest } }))
+		.map(({ id, ...rest }: CatI) => ({ [id]: { id, ...rest } }))
 		.reduce((res: any, cur: any) => ({ ...res, ...cur }), {});
 
 /**
@@ -95,8 +68,21 @@ const reducer = (state: State, { type, data }: ReducerAction) => {
 			newState = deepmerge(state, indexCats(data));
 			break;
 		case Actions.SAVE_VOTES:
-			//TODO
-			console.log(data);
+			//tally up votes
+
+			newState = deepmerge(
+				state,
+				indexOther(
+					data.map(({ value, image_id, ...rest }: VoteI) => {
+						const old = state[image_id] as MergedCatI;
+						return {
+							...rest,
+							id: image_id,
+							score: (old.score || 0) + value ? 1 : -1,
+						};
+					})
+				)
+			);
 			break;
 		case Actions.SAVE_FAVOURITES:
 			newState = deepmerge(

@@ -39,29 +39,36 @@ export interface AppSecret {
 	secret: string;
 }
 
-export interface CatBreed {
-	id: string;
-	name: string;
-	origin: string;
-	life_span: string;
-	alt_names?: string;
-	temperament: string;
-	reference_image_id: string | null;
-	weight_imperial: string;
-	wikipedia_url: string;
-	experimental?: boolean;
-	hairless: boolean;
-	hypoallergenic: boolean;
-	rex: boolean;
-	short_legs: boolean;
-	suppressed_tail: boolean;
-	natural: boolean;
-	rare: boolean;
-}
-
 interface IUploadPicture {
 	name?: string;
 	file: File;
+}
+
+export interface CategoryI {
+	id: number;
+	name: string;
+}
+
+export interface MergedCatI extends CatI {
+	favourite?: boolean;
+	score?: number;
+}
+
+export interface CatI {
+	id: string;
+	url: URL;
+	width: number;
+	height: number;
+	categories?: CategoryI[];
+}
+
+export interface VoteI {
+	value: number;
+	image_id: string;
+}
+
+export interface FavouriteI {
+	image_id: string;
 }
 
 export const actionLoadCatPics = async (
@@ -84,7 +91,7 @@ export const actionLoadCatPic = async (dispatch: Dispatch<any>, id: string) => {
 		console.error(`Request failed loadSearchCatPic`);
 	}
 
-	dispatch({ type: Actions.SAVE_CATS, data: [await request.json] });
+	dispatch({ type: Actions.SAVE_CATS, data: [await request.json()] });
 
 	return request.headers.get('Pagination-Count');
 };
@@ -95,16 +102,18 @@ export const actionLoadFavourites = async (dispatch: Dispatch<any>) => {
 		console.error(`Request failed loadSearchCatPic`);
 	}
 
-	dispatch({ type: Actions.SAVE_FAVOURITES, data: [await request.json] });
+	dispatch({ type: Actions.SAVE_FAVOURITES, data: await request.json() });
 
 	return request.headers.get('Pagination-Count');
 };
 
 export const actionLoadVotes = async (dispatch: Dispatch<any>) => {
-	const request = await getFavouriteCatPics();
+	const request = await getMyVotes();
 	if (!request.ok) {
 		console.error(`Request failed loadSearchCatPic`);
 	}
+
+	const votes: VoteI[] = await request.json();
 
 	dispatch({ type: Actions.SAVE_VOTES, data: await request.json() });
 
@@ -145,13 +154,12 @@ export const postVote = async (image_id: string, vote: boolean) =>
 		body: JSON.stringify({ image_id, value: vote }),
 	});
 
-export const getMyVotes = async (page = 0, limit = 16) =>
-	await fetch(`${url}/votes?page=${page}&limit=${limit}`, GET);
+export const getMyVotes = async () => await fetch(`${url}/votes`, GET);
 
 const getSearchCatPics = async (limit = 16) =>
 	await fetch(`${url}/images/search?limit=${limit}`, GET);
 
-export const getFavouriteCatPics = async (limit = 16) =>
+export const getFavouriteCatPics = async () =>
 	await fetch(`${url}/favourites`, GET);
 
 export const setFavourite = async (id: string, favourite: boolean) => {
