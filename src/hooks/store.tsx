@@ -1,7 +1,6 @@
 import { createContext, useContext, useReducer } from 'react';
 import { CatBreed, getCatById, getFavouriteCatPics, getMyVotes, getSearchCatPics } from './thecatapi';
 import deepmerge from 'deepmerge';
-import { Interface } from 'readline';
 
 const initialState = {};
 
@@ -70,21 +69,7 @@ const indexOther = (items:any) =>
 	items.map(({ image_id, ...rest }: VoteI | FavouriteI) => ({[image_id]: { id: image_id, ...rest }}))
 		.reduce((res: any, cur: any) => ({ ...res, ...cur }), {})
 
-/*
-const calcVotes = (items:any[]):object =>
-	items.map(({image_id, value}) => ({image_id, value: value !==1 ? -1 : 1}))
-*/
-
-
-/**
- * Update any existing Cat states with incoming data
- * @param state
- * @param data
- */
-const consolidateCats=(state:State, data:any[]):object =>
-	data.map(({image_id, ...cat}) => ({...state[`cat_${image_id}`], ...cat}))
-
-const reducer = async (state: State = {}, { type , data}: ReducerAction) => {
+const reducer = async (state: State, { type , data}: ReducerAction) => {
 	let request;
 	let newState = state;
 
@@ -99,7 +84,7 @@ const reducer = async (state: State = {}, { type , data}: ReducerAction) => {
 				console.error(`Request failed ${type}`);
 			}
 
-			newState = deepmerge(state, indexCats((await request.json())))
+			newState = deepmerge(state, indexCats([(await request.json())]))
 
 			break;
 		case Actions.SAVE_CATS:
@@ -156,12 +141,3 @@ export const useStore = () => {
 
 	return { state, dispatch };
 };
-/*
-
-export default function AppState({ ...props }: any) {
-	// @ts-ignore
-	const [state, dispatch] = useReducer(reducer, initialState);
-
-	return <StoreContext.Provider {...props} value={{ state, dispatch }} />;
-}
-*/

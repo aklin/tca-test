@@ -6,8 +6,6 @@ import { useInitialiseStore,StoreContext } from './hooks/store';
 export default function App({ hist }: any) {
 	const {state,dispatch}=useInitialiseStore()
 
-
-
 	return (
 		<StoreContext.Provider value={{state,dispatch}}>
 		<BrowserRouter>
