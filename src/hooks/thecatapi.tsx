@@ -64,40 +64,52 @@ interface IUploadPicture {
 	file: File;
 }
 
-export const actionLoadCatPics = async (dispatch:Dispatch<any>, limit=16) =>{
+export const actionLoadCatPics = async (
+	dispatch: Dispatch<any>,
+	limit = 16
+) => {
 	const request = await getSearchCatPics(limit);
 	if (!request.ok) {
 		console.error(`Request failed loadSearchCatPics`);
 	}
 
-	dispatch({type:Actions.SAVE_CATS, data: (await request.json())})
+	dispatch({ type: Actions.SAVE_CATS, data: await request.json() });
 
-	return request.headers.get("Pagination-Count")
-}
+	return request.headers.get('Pagination-Count');
+};
 
-export const actionLoadCatPic = async (dispatch:Dispatch<any>, id:string)=>{
+export const actionLoadCatPic = async (dispatch: Dispatch<any>, id: string) => {
 	const request = await getCatById(id);
 	if (!request.ok) {
 		console.error(`Request failed loadSearchCatPic`);
 	}
 
-	dispatch({type: Actions.SAVE_CATS, data: [(await request.json)]})
+	dispatch({ type: Actions.SAVE_CATS, data: [await request.json] });
 
-	return request.headers.get("Pagination-Count")
-}
+	return request.headers.get('Pagination-Count');
+};
 
-
-export const actionLoadVotes = async(dispatch:Dispatch<any>) => {
+export const actionLoadFavourites = async (dispatch: Dispatch<any>) => {
 	const request = await getFavouriteCatPics();
 	if (!request.ok) {
 		console.error(`Request failed loadSearchCatPic`);
 	}
 
-	dispatch({type: Actions.SAVE_VOTES, data: await request.json()})
+	dispatch({ type: Actions.SAVE_FAVOURITES, data: [await request.json] });
 
-	return request.headers.get("Pagination-Count")
-}
+	return request.headers.get('Pagination-Count');
+};
 
+export const actionLoadVotes = async (dispatch: Dispatch<any>) => {
+	const request = await getFavouriteCatPics();
+	if (!request.ok) {
+		console.error(`Request failed loadSearchCatPic`);
+	}
+
+	dispatch({ type: Actions.SAVE_VOTES, data: await request.json() });
+
+	return request.headers.get('Pagination-Count');
+};
 
 export const getBreeds = async (page = 0, limit = 10) =>
 	await fetch(`${url}/breeds?page=${page}&limit=${limit}`, GET);
@@ -130,7 +142,7 @@ export const postPicture = async (form: IUploadPicture) => {
 export const postVote = async (image_id: string, vote: boolean) =>
 	await fetch(`${url}/votes/`, {
 		...POST,
-		body: JSON.stringify({ image_id, value:vote }),
+		body: JSON.stringify({ image_id, value: vote }),
 	});
 
 export const getMyVotes = async (page = 0, limit = 16) =>
@@ -147,6 +159,6 @@ export const setFavourite = async (id: string, favourite: boolean) => {
 
 	return await fetch(`${url}/favourites/`, {
 		...POST,
-		body: JSON.stringify({ image_id:	id }),
+		body: JSON.stringify({ image_id: id }),
 	});
 };
