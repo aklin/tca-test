@@ -92,7 +92,6 @@ export const actionLoadCatPic = async (dispatch: Dispatch<any>, id: string) => {
 	}
 
 	dispatch({ type: Actions.SAVE_CATS, data: [await request.json()] });
-
 	return request.headers.get('Pagination-Count');
 };
 
@@ -103,7 +102,16 @@ export const actionLoadFavourites = async (dispatch: Dispatch<any>) => {
 	}
 
 	dispatch({ type: Actions.SAVE_FAVOURITES, data: await request.json() });
+	return request.headers.get('Pagination-Count');
+};
 
+export const actionLoadOwnUploads = async (dispatch: Dispatch<any>) => {
+	const request = await getMyCatPics();
+	if (!request.ok) {
+		console.error(`Request failed loadSearchCatPic`);
+	}
+
+	dispatch({ type: Actions.SAVE_UPLOADS, data: await request.json() });
 	return request.headers.get('Pagination-Count');
 };
 

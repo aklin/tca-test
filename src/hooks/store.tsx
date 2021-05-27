@@ -14,14 +14,15 @@ export const StoreContext = createContext<ContextI>({});
 type ReducerActionName = string;
 
 export const Actions = {
-	FETCH_BREEDS: 'FETCH_BREEDS',
+	/*	FETCH_BREEDS: 'FETCH_BREEDS',
 	FETCH_FAVOURITES: 'FETCH_FAVOURITES',
 	FETCH_VOTES: 'FETCH_VOTES',
 	FETCH_CATS: 'FETCH_CATS',
-	FETCH_CAT: 'FETCH_CAT',
+	FETCH_CAT: 'FETCH_CAT',*/
 	SAVE_CATS: 'SAVE_CATS',
 	SAVE_VOTES: 'SAVE_VOTES',
 	SAVE_FAVOURITES: 'SAVE_FAVOURITES',
+	SAVE_UPLOADS: 'SAVE_UPLOADS',
 };
 
 interface State {
@@ -46,14 +47,15 @@ const indexCats = (items: any[]): object =>
  * For all other endpoints
  * @param items
  */
-const indexOther = (items: any) =>
+/*const indexOther = (items: any) =>
 	items
 		.map(({ image_id, ...rest }: VoteI | FavouriteI) => ({
 			[image_id]: { id: image_id, ...rest },
 		}))
-		.reduce((res: any, cur: any) => ({ ...res, ...cur }), {});
-
-const reducer = (state: State, { type, data }: ReducerAction) => {
+		.reduce((res: any, cur: any) => ({ ...res, ...cur }), {})*/ const reducer = (
+	state: State,
+	{ type, data }: ReducerAction
+) => {
 	let request;
 	let newState = state;
 
@@ -72,7 +74,7 @@ const reducer = (state: State, { type, data }: ReducerAction) => {
 
 			newState = deepmerge(
 				state,
-				indexOther(
+				indexCats(
 					data.map(({ value, image_id, ...rest }: VoteI) => {
 						const old = state[image_id] as MergedCatI;
 						return {
@@ -87,12 +89,18 @@ const reducer = (state: State, { type, data }: ReducerAction) => {
 		case Actions.SAVE_FAVOURITES:
 			newState = deepmerge(
 				state,
-				indexOther(
+				indexCats(
 					data.map(({ image_id }: FavouriteI) => ({
 						id: image_id,
 						favourite: true,
 					}))
 				)
+			);
+			break;
+		case Actions.SAVE_UPLOADS:
+			newState = deepmerge(
+				state,
+				indexCats(data.map((cat: CatI) => ({ ...cat, ownUpload: true })))
 			);
 			break;
 		default:
@@ -109,12 +117,6 @@ const reducer = (state: State, { type, data }: ReducerAction) => {
 export const useInitialiseStore = () => {
 	// @ts-ignore
 	const [state, dispatch] = useReducer(reducer, initialState);
-
-	return { state, dispatch };
-};
-
-export const useStore = () => {
-	const { state, dispatch } = useContext(StoreContext);
 
 	return { state, dispatch };
 };

@@ -1,16 +1,21 @@
-import { CardActions, CardContent, CardMedia, Chip, CircularProgress } from '@material-ui/core';
+import {
+	CardActions,
+	CardContent,
+	CardMedia,
+	Chip,
+	CircularProgress,
+} from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import Card from '../Card/Card';
 import { makeStyles } from '@material-ui/core/styles';
-import useCats from '../../hooks/cathook';
-import { actionLoadCatPic, getCatById, setFavourite } from '../../hooks/thecatapi';
+import { actionLoadCatPic, setFavourite } from '../../hooks/thecatapi';
 import GridContainer from '../Grid/GridContainer';
 import GridItem from '../Grid/GridItem';
 import CatVotePanel from '../ActionButtons/voteBtn';
-import { useContext, useEffect, useState } from 'react';
-import { Actions, StoreContext, useStore } from '../../hooks/store';
-import SpinningArrows from "assets/img/Spinning_arrows.gif"
+import { useContext } from 'react';
+import { StoreContext } from '../../hooks/store';
+import SpinningArrows from 'assets/img/Spinning_arrows.gif';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -27,17 +32,19 @@ const useStyles = makeStyles((theme) => ({
 
 export default function CatItem({ image_id }) {
 	const classes = useStyles();
-	const { state, dispatch } = useContext(StoreContext)
+	const { state, dispatch } = useContext(StoreContext);
 	const item = (state || {})[image_id];
 
-	!image_id && new Error("Missing image_id")
+	!image_id && new Error('Missing image_id');
 
-	!item && actionLoadCatPic(dispatch, image_id)
+	!item && actionLoadCatPic(dispatch, image_id);
 
-	console.group(`CatItem ${image_id}`)
-	console.log(state)
-	console.log(item)
-	console.groupEnd()
+	/*
+	console.group(`CatItem ${image_id}`);
+	console.log(state);
+	console.log(item);
+	console.groupEnd();
+*/
 
 	const {
 		name,
@@ -48,7 +55,7 @@ export default function CatItem({ image_id }) {
 		categories = [],
 		breeds = [],
 		isFavourite = false,
-		score=0,
+		score = 0,
 	} = item || {};
 
 	const toggleFavourite = async () => {
@@ -57,13 +64,17 @@ export default function CatItem({ image_id }) {
 
 	return (
 		<Card>
-			{url ? <CardMedia
-				className={classes.media}
-				height={url ? `${height}px` : '48px'}
-				width={url ? `${width}px` : '48px'}
-				image={url || SpinningArrows}
-				title={id}
-			/> : <CircularProgress />}
+			{url ? (
+				<CardMedia
+					className={classes.media}
+					height={url ? `${height}px` : '48px'}
+					width={url ? `${width}px` : '48px'}
+					image={url || SpinningArrows}
+					title={id}
+				/>
+			) : (
+				<CircularProgress />
+			)}
 			<CardContent>
 				{name}
 				<GridContainer className={classes.categories}>
