@@ -14,11 +14,15 @@ _Logic_
 - `src/hooks/store.tsx`
 - `src/hooks/thecatapi.tsx`
 
-_Components & Views_
+_Components_
 
 - `src/components/*Cat*` - ie. everything with _Cat_ in the name
 - `src/components/*Votes*`
-- `src/views/UploadView`
+
+_Views_
+
+- `src/views/UploadView` - Upload view. Corresponds to `/upload`
+- `src/views/Dashboard` - Everything else. Corresponds to `/`
 
 ## Code Layout
 
@@ -104,5 +108,6 @@ encountered in the wild.
 
 - The _Favourite_ button does not appear set when an item has been made favourite
 - No error display when unsetting a _Favourite_ cat
+- _Upload_ view does not go back to _/_ after uploading an image
 
 [ctui]: https://www.creative-tim.com/product/material-dashboard-react
