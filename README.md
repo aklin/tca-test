@@ -9,6 +9,15 @@ Responsive view
 The UI is Creative Tim's excellent [Dashboard UI][ctui]. When evaluating the
 submission please focus on the following files:
 
+## Building the Project
+
+1. Check out this repo
+1. Run `yarn`
+1. Run `yarn run start`
+1. Open `http://localhost:3000`
+
+## Code Layout
+
 _Logic_
 
 - `src/hooks/store.tsx`
@@ -23,8 +32,6 @@ _Views_
 
 - `src/views/UploadView` - Upload view. Corresponds to `/upload`
 - `src/views/Dashboard` - Everything else. Corresponds to `/`
-
-## Code Layout
 
 The code is split in two main views: The Dashboard and the Upload page.
 
