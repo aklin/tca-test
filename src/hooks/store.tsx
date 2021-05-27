@@ -1,5 +1,7 @@
 import { createContext, useContext, useReducer } from 'react';
-import { CatBreed, getFavouriteCatPics, getMyVotes } from './thecatapi';
+import { CatBreed, getCatById, getFavouriteCatPics, getMyVotes, getSearchCatPics } from './thecatapi';
+import deepmerge from 'deepmerge';
+import { Interface } from 'readline';
 
 const initialState = {};
 
@@ -11,44 +13,96 @@ export const Actions = {
 	FETCH_BREEDS: 'FETCH_BREEDS',
 	FETCH_FAVOURITES:'FETCH_FAVOURITES',
 	FETCH_VOTES:'FETCH_VOTES',
-	FETCH_FAVS_AND_VOTES:'FETCH_VOTES',
 	FETCH_CATS:'FETCH_CATS',
+	FETCH_CAT:'FETCH_CAT',
 };
+
+interface State{
+	[index:string]:object
+}
+
+interface CategoryI{
+	id:number
+	name:string
+}
+
+export interface MergedCatI extends CatI{
+	favourite?:boolean
+	score?:number
+}
+
+interface CatI {
+id:string
+	url:URL
+	width:number
+	height:number
+	categories?:CategoryI[]
+}
+
+interface VoteI{
+	value:number
+	image_id:string
+}
+
+interface FavouriteI{
+	image_id:string
+}
 
 export interface ReducerAction {
 	type: ReducerActionName;
 	data: any | undefined;
 }
 
-const consolidate = (items:any[], prefix:string):object =>
-	items.map(({ id, ...rest }: CatBreed) => ({[`${prefix}_${id}`]: { id, ...rest }}))
+/**
+ * For /images endpoints
+ * @param items
+ */
+const indexCats = (items:any[]):object =>
+	items.map(({ id, ...rest }: CatBreed) => ({id: { id, ...rest }}))
 	.reduce((res: any, cur: any) => ({ ...res, ...cur }), {})
+
+/**
+ * For all other endpoints
+ * @param items
+ */
+const indexOther = (items:any) =>
+	items.map(({ image_id, ...rest }: VoteI | FavouriteI) => ({id: { id: image_id, ...rest }}))
+		.reduce((res: any, cur: any) => ({ ...res, ...cur }), {})
 
 
 const calcVotes = (items:any[]):object =>
 	items.map(({image_id, value}) => ({image_id, value: value !==1 ? -1 : 1}))
 
 
-const reducer = async (state: any, { type, data }: ReducerAction) => {
+/**
+ * Update any existing Cat states with incoming data
+ * @param state
+ * @param data
+ */
+const consolidateCats=(state:State, data:any[]):object =>
+	data.map(({image_id, ...cat}) => ({...state[`cat_${image_id}`], ...cat}))
+
+const reducer = async (state: State = {}, { type , data}: ReducerAction) => {
 	let request;
 	let newState = state;
 	switch (type) {
-		case Actions.FETCH_CATS:
-			request = await getFavouriteCatPics();
+		case Actions.FETCH_CAT:
+			const {id} = data
+			request = await getCatById(id);
 			if (!request.ok) {
 				console.error(`Request failed ${type}`);
 			}
-			break;
-		case Actions.FETCH_FAVS_AND_VOTES:
-			const r1=await (await getMyVotes()).json()
-			const r2=await (await getFavouriteCatPics()).json()
 
-			newState={
-				...state,
-				...consolidate(r1, 'vote'),
-				...consolidate(r2, 'fav')
+			newState = deepmerge(state, indexCats((await request.json())))
+
+			break;
+		case Actions.FETCH_CATS:
+			request = await getSearchCatPics();
+			if (!request.ok) {
+				console.error(`Request failed ${type}`);
 			}
 
+			newState = deepmerge(state, indexCats((await request.json())))
 			break;
 		case Actions.FETCH_VOTES:
 			request = await getMyVotes();
@@ -56,11 +110,7 @@ const reducer = async (state: any, { type, data }: ReducerAction) => {
 				console.error(`Request failed ${type}`);
 			}
 
-			newState={
-				...state,
-				...consolidate(await request.json(), 'vote'),
-			}
-
+			newState=deepmerge(state, indexOther((await request.json())))
 			break;
 		case Actions.FETCH_FAVOURITES:
 			request = await getFavouriteCatPics();
@@ -68,11 +118,7 @@ const reducer = async (state: any, { type, data }: ReducerAction) => {
 				console.error(`Request failed ${type}`);
 			}
 
-			newState={
-				...state,
-				...consolidate(await request.json(), 'fav'),
-			}
-
+			newState=deepmerge(state, indexOther((await request.json())))
 			break;
 	}
 

@@ -1,4 +1,4 @@
-import { CardActions, CardContent, CardMedia, Chip, CircularProgress } from '@material-ui/core';
+import { CardActions, CardContent, CardMedia, Chip } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import Card from '../Card/Card';
@@ -7,7 +7,8 @@ import useCats from '../../hooks/cathook';
 import { getCatById, setFavourite } from '../../hooks/thecatapi';
 import GridContainer from '../Grid/GridContainer';
 import GridItem from '../Grid/GridItem';
-import CatVoteButton from '../ActionButtons/voteBtn';
+import CatVotePanel from '../ActionButtons/voteBtn';
+import { useEffect, useState } from 'react';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -22,16 +23,27 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export default function CatItem({ item={}, image_id, isFavourite=false, isVoteUp=false, isVoteDown=false }) {
+export default function CatItem({ item = {}, image_id, isFavourite = false, score = 0 }) {
 	const classes = useStyles();
+	const [needLoad, setNeedLoad] = useState(!image_id);
+	// const [items,setItems]=useState()
 
-	const { items, loading } = useCats(async () =>
-		image_id
+	useEffect(()=>{
+		if(!needLoad){
+			return;
+		}
+
+		setNeedLoad(false)
+
+	}, [needLoad])
+
+	const { items } = useCats(async () =>
+		needLoad
 			? await getCatById(image_id)
-			: ({ items: item, loading: false })
+			: ({ items: item, loading: false }),
 	);
 	const { name, id, url, height, width, categories = [], breeds = [] } =
-		(item.url ? item : item.image) || items;
+	(item.url ? item : item.image) || items;
 
 	const toggleFavourite = async () => {
 		await setFavourite(id, true);
@@ -39,55 +51,50 @@ export default function CatItem({ item={}, image_id, isFavourite=false, isVoteUp
 
 	return (
 		<Card>
-			{loading ? (
-				<CircularProgress />
-			) : (
-				<CardMedia
-					className={classes.media}
-					height={`${height}px`}
-					width={`${width}px`}
-					image={url}
-					title={name}
-				/>
-			)}
-			<CardContent>
-				{name}
-				<GridContainer className={classes.categories}>
-					{breeds.length === 0 && (
-						<GridItem>
-							<Chip label={'No breed info'} />
-						</GridItem>
-					)}
-					{breeds.map(({ name }) => (
-						<GridItem>
-							<Chip color={'primary'} label={name} key={id + name} />
-						</GridItem>
-					))}
-				</GridContainer>
-				<GridContainer className={classes.categories}>
-					{categories.length === 0 && (
-						<GridItem>
-							<Chip label={'Uncategorised'} />
-						</GridItem>
-					)}
-					{categories.map(({ name }) => (
-						<GridItem>
-							<Chip color={'secondary'} label={name} key={id + name} />
-						</GridItem>
-					))}
-				</GridContainer>
-			</CardContent>
+			<CardMedia
+				className={classes.media}
+				height={`${height}px`}
+				width={`${width}px`}
+				image={url}
+				title={name}
+			/> <CardContent>
+			{name}
+			<GridContainer className={classes.categories}>
+				{breeds.length === 0 && (
+					<GridItem>
+						<Chip label={'No breed info'} />
+					</GridItem>
+				)}
+				{breeds.map(({ name }) => (
+					<GridItem>
+						<Chip color={'primary'} label={name} key={id + name} />
+					</GridItem>
+				))}
+			</GridContainer>
+			<GridContainer className={classes.categories}>
+				{categories.length === 0 && (
+					<GridItem>
+						<Chip label={'Uncategorised'} />
+					</GridItem>
+				)}
+				{categories.map(({ name }) => (
+					<GridItem>
+						<Chip color={'secondary'} label={name} key={id + name} />
+					</GridItem>
+				))}
+			</GridContainer>
+		</CardContent>
 			<CardActions>
 				<IconButton
 					disabled={!id}
-					aria-label="add to favorites"
+					color={isFavourite ? 'primary' : undefined}
+					aria-label='add to favorites'
 					onClick={() => toggleFavourite()}
 				>
 					<FavoriteIcon />
 				</IconButton>
 				<span />
-				<CatVoteButton image_id={id} />
-				<CatVoteButton image_id={id} voteDown />
+				<CatVotePanel score={score} image_id={id} />
 			</CardActions>
 		</Card>
 	);
