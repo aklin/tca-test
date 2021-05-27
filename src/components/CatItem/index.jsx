@@ -7,11 +7,7 @@ import {
 } from '@material-ui/core';
 import Card from '../Card/Card';
 import { makeStyles } from '@material-ui/core/styles';
-import {
-	actionLoadCatPic,
-	actionToggleFavourite,
-	setFavourite,
-} from '../../hooks/thecatapi';
+import { actionLoadCatPic, actionToggleFavourite } from '../../hooks/thecatapi';
 import GridContainer from '../Grid/GridContainer';
 import GridItem from '../Grid/GridItem';
 import CatVotePanel from '../ActionButtons/voteBtn';
@@ -58,10 +54,6 @@ export default function CatItem({ image_id }) {
 	} = item || {};
 
 	!url && actionLoadCatPic(dispatch, image_id);
-
-	const toggleFavourite = async () => {
-		await setFavourite(id, true);
-	};
 
 	return (
 		<Card>
@@ -112,7 +104,7 @@ export default function CatItem({ image_id }) {
 					}
 				/>
 				<span />
-				<CatVotePanel score={score} image_id={id} />
+				<CatVotePanel score={score} image_id={id} dispatch={dispatch} />
 			</CardActions>
 		</Card>
 	);

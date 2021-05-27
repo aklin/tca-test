@@ -131,6 +131,23 @@ export const actionLoadOwnUploads = async (dispatch: Dispatch<any>) => {
 	return request.headers.get('Pagination-Count');
 };
 
+export const actionSetVote = async (
+	dispatch: Dispatch<any>,
+	image_id: string,
+	positiveVote: boolean
+) => {
+	const request = await postVote(image_id, positiveVote);
+	if (!request.ok) {
+		console.error(`Request failed actionSetVote`);
+		return;
+	}
+
+	dispatch({
+		type: Actions.SAVE_VOTES,
+		data: [{ image_id, value: positiveVote ? 1 : 0 }],
+	});
+};
+
 export const actionLoadVotes = async (dispatch: Dispatch<any>) => {
 	const request = await getMyVotes();
 	if (!request.ok) {
@@ -142,12 +159,6 @@ export const actionLoadVotes = async (dispatch: Dispatch<any>) => {
 
 	return request.headers.get('Pagination-Count');
 };
-
-export const getBreeds = async (page = 0, limit = 10) =>
-	await fetch(`${url}/breeds?page=${page}&limit=${limit}`, GET);
-
-export const searchBreedsByName = async (name: string) =>
-	await fetch(`${url}/breeds/search?q=${name}`, GET);
 
 export const getMyCatPics = async (page = 0, limit = 16) =>
 	await fetch(`${url}/images?page=${page}&limit=${limit}`, GET);
