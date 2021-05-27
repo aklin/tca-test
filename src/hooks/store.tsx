@@ -15,6 +15,7 @@ export const Actions = {
 	FETCH_VOTES:'FETCH_VOTES',
 	FETCH_CATS:'FETCH_CATS',
 	FETCH_CAT:'FETCH_CAT',
+	SAVE_CATS:'SAVE_CATS',
 };
 
 interface State{
@@ -58,7 +59,7 @@ export interface ReducerAction {
  * @param items
  */
 const indexCats = (items:any[]):object =>
-	items.map(({ id, ...rest }: CatBreed) => ({id: { id, ...rest }}))
+	items.map(({ id, ...rest }: CatBreed) => ({[id]: { id, ...rest }}))
 	.reduce((res: any, cur: any) => ({ ...res, ...cur }), {})
 
 /**
@@ -66,12 +67,13 @@ const indexCats = (items:any[]):object =>
  * @param items
  */
 const indexOther = (items:any) =>
-	items.map(({ image_id, ...rest }: VoteI | FavouriteI) => ({id: { id: image_id, ...rest }}))
+	items.map(({ image_id, ...rest }: VoteI | FavouriteI) => ({[image_id]: { id: image_id, ...rest }}))
 		.reduce((res: any, cur: any) => ({ ...res, ...cur }), {})
 
-
+/*
 const calcVotes = (items:any[]):object =>
 	items.map(({image_id, value}) => ({image_id, value: value !==1 ? -1 : 1}))
+*/
 
 
 /**
@@ -85,6 +87,10 @@ const consolidateCats=(state:State, data:any[]):object =>
 const reducer = async (state: State = {}, { type , data}: ReducerAction) => {
 	let request;
 	let newState = state;
+
+	console.group(`-> Dispatch ${type}`);
+	console.log(data)
+
 	switch (type) {
 		case Actions.FETCH_CAT:
 			const {id} = data
@@ -95,6 +101,12 @@ const reducer = async (state: State = {}, { type , data}: ReducerAction) => {
 
 			newState = deepmerge(state, indexCats((await request.json())))
 
+			break;
+		case Actions.SAVE_CATS:
+			console.log('indexCats')
+			console.log(indexCats(data))
+
+			newState = deepmerge(state, indexCats(data))
 			break;
 		case Actions.FETCH_CATS:
 			request = await getSearchCatPics();
@@ -120,9 +132,10 @@ const reducer = async (state: State = {}, { type , data}: ReducerAction) => {
 
 			newState=deepmerge(state, indexOther((await request.json())))
 			break;
+		default:
+			console.error(new Error().stack)
 	}
 
-	console.group(`-> Dispatch ${type}`);
 	console.log(state);
 	console.log(newState);
 	console.groupEnd();

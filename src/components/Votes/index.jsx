@@ -8,5 +8,11 @@ export default function Votes() {
 	console.log(items);
 	console.log(totalItems);
 
-	return <CatGrid image_ids={items.map(({image_id}) => image_id)} total={totalItems} loading={loading} />;
+	return (
+		<CatGrid
+			image_ids={items.map(({ image_id }) => image_id)}
+			total={totalItems}
+			loading={loading}
+		/>
+	);
 }

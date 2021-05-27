@@ -4,7 +4,6 @@ import { postVote } from '../../hooks/thecatapi';
 import { ThumbDown } from '@material-ui/icons';
 
 export default function CatVotePanel({ image_id, score = 0, ...props }) {
-
 	return (
 		<>
 			<IconButton
@@ -18,12 +17,11 @@ export default function CatVotePanel({ image_id, score = 0, ...props }) {
 			<IconButton
 				color={score < 0 ? 'error' : undefined}
 				aria-label={'vote down'}
-				onClick={async ()=> await postVote(image_id, false)}
+				onClick={async () => await postVote(image_id, false)}
 				{...props}
 			>
 				<ThumbDown />
 			</IconButton>
-
 		</>
 	);
 }

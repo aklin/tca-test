@@ -23,27 +23,29 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-export default function CatItem({ item = {}, image_id, isFavourite = false, score = 0 }) {
+export default function CatItem({
+	item = {},
+	image_id,
+	isFavourite = false,
+	score = 0,
+}) {
 	const classes = useStyles();
 	const [needLoad, setNeedLoad] = useState(!image_id);
 	// const [items,setItems]=useState()
 
-	useEffect(()=>{
-		if(!needLoad){
+	useEffect(() => {
+		if (!needLoad) {
 			return;
 		}
 
-		setNeedLoad(false)
-
-	}, [needLoad])
+		setNeedLoad(false);
+	}, [needLoad]);
 
 	const { items } = useCats(async () =>
-		needLoad
-			? await getCatById(image_id)
-			: ({ items: item, loading: false }),
+		needLoad ? await getCatById(image_id) : { items: item, loading: false }
 	);
 	const { name, id, url, height, width, categories = [], breeds = [] } =
-	(item.url ? item : item.image) || items;
+		(item.url ? item : item.image) || items;
 
 	const toggleFavourite = async () => {
 		await setFavourite(id, true);
@@ -57,38 +59,39 @@ export default function CatItem({ item = {}, image_id, isFavourite = false, scor
 				width={`${width}px`}
 				image={url}
 				title={name}
-			/> <CardContent>
-			{name}
-			<GridContainer className={classes.categories}>
-				{breeds.length === 0 && (
-					<GridItem>
-						<Chip label={'No breed info'} />
-					</GridItem>
-				)}
-				{breeds.map(({ name }) => (
-					<GridItem>
-						<Chip color={'primary'} label={name} key={id + name} />
-					</GridItem>
-				))}
-			</GridContainer>
-			<GridContainer className={classes.categories}>
-				{categories.length === 0 && (
-					<GridItem>
-						<Chip label={'Uncategorised'} />
-					</GridItem>
-				)}
-				{categories.map(({ name }) => (
-					<GridItem>
-						<Chip color={'secondary'} label={name} key={id + name} />
-					</GridItem>
-				))}
-			</GridContainer>
-		</CardContent>
+			/>{' '}
+			<CardContent>
+				{name}
+				<GridContainer className={classes.categories}>
+					{breeds.length === 0 && (
+						<GridItem>
+							<Chip label={'No breed info'} />
+						</GridItem>
+					)}
+					{breeds.map(({ name }) => (
+						<GridItem>
+							<Chip color={'primary'} label={name} key={id + name} />
+						</GridItem>
+					))}
+				</GridContainer>
+				<GridContainer className={classes.categories}>
+					{categories.length === 0 && (
+						<GridItem>
+							<Chip label={'Uncategorised'} />
+						</GridItem>
+					)}
+					{categories.map(({ name }) => (
+						<GridItem>
+							<Chip color={'secondary'} label={name} key={id + name} />
+						</GridItem>
+					))}
+				</GridContainer>
+			</CardContent>
 			<CardActions>
 				<IconButton
 					disabled={!id}
 					color={isFavourite ? 'primary' : undefined}
-					aria-label='add to favorites'
+					aria-label="add to favorites"
 					onClick={() => toggleFavourite()}
 				>
 					<FavoriteIcon />
