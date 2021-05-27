@@ -1,4 +1,6 @@
 import Secrets from '../secrets';
+import { Dispatch } from 'react';
+import { Actions } from './store';
 
 const { secret: apiKey } =
 	Secrets.find(({ name }) => name === 'thecatapi.com') || {};
@@ -62,6 +64,41 @@ interface IUploadPicture {
 	file: File;
 }
 
+export const actionLoadCatPics = async (dispatch:Dispatch<any>, limit=16) =>{
+	const request = await getSearchCatPics(limit);
+	if (!request.ok) {
+		console.error(`Request failed loadSearchCatPics`);
+	}
+
+	dispatch({type:Actions.SAVE_CATS, data: (await request.json())})
+
+	return request.headers.get("Pagination-Count")
+}
+
+export const actionLoadCatPic = async (dispatch:Dispatch<any>, id:string)=>{
+	const request = await getCatById(id);
+	if (!request.ok) {
+		console.error(`Request failed loadSearchCatPic`);
+	}
+
+	dispatch({type: Actions.SAVE_CATS, data: [(await request.json)]})
+
+	return request.headers.get("Pagination-Count")
+}
+
+
+export const actionLoadVotes = async(dispatch:Dispatch<any>) => {
+	const request = await getFavouriteCatPics();
+	if (!request.ok) {
+		console.error(`Request failed loadSearchCatPic`);
+	}
+
+	dispatch({type: Actions.SAVE_VOTES, data: await request.json()})
+
+	return request.headers.get("Pagination-Count")
+}
+
+
 export const getBreeds = async (page = 0, limit = 10) =>
 	await fetch(`${url}/breeds?page=${page}&limit=${limit}`, GET);
 
@@ -99,7 +136,7 @@ export const postVote = async (image_id: string, vote: boolean) =>
 export const getMyVotes = async (page = 0, limit = 16) =>
 	await fetch(`${url}/votes?page=${page}&limit=${limit}`, GET);
 
-export const getSearchCatPics = async (limit = 16) =>
+const getSearchCatPics = async (limit = 16) =>
 	await fetch(`${url}/images/search?limit=${limit}`, GET);
 
 export const getFavouriteCatPics = async (limit = 16) =>

@@ -4,7 +4,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import Card from '../Card/Card';
 import { makeStyles } from '@material-ui/core/styles';
 import useCats from '../../hooks/cathook';
-import { getCatById, setFavourite } from '../../hooks/thecatapi';
+import { actionLoadCatPic, getCatById, setFavourite } from '../../hooks/thecatapi';
 import GridContainer from '../Grid/GridContainer';
 import GridItem from '../Grid/GridItem';
 import CatVotePanel from '../ActionButtons/voteBtn';
@@ -27,12 +27,15 @@ const useStyles = makeStyles((theme) => ({
 
 export default function CatItem({ image_id }) {
 	const classes = useStyles();
-	const [needLoad, setNeedLoad] = useState(true);
-	const { state:store, dispatch } = useStore()
-	const item = (store || {})[image_id];
+	const { state, dispatch } = useContext(StoreContext)
+	const item = (state || {})[image_id];
+
+	!image_id && new Error("Missing image_id")
+
+	!item && actionLoadCatPic(dispatch, image_id)
 
 	console.group(`CatItem ${image_id}`)
-	console.log(store)
+	console.log(state)
 	console.log(item)
 	console.groupEnd()
 
@@ -47,21 +50,6 @@ export default function CatItem({ image_id }) {
 		isFavourite = false,
 		score=0,
 	} = item || {};
-
-	useEffect(() => {
-		if (!needLoad) {
-			return;
-		}
-
-		if (!image_id) {
-			throw new Error();
-		}
-
-		console.log('No item or needLoad')
-		!item && dispatch({ type: Actions.FETCH_CAT, data: { id: image_id } });
-
-		setNeedLoad(false);
-	}, [!!item, needLoad]);
 
 	const toggleFavourite = async () => {
 		await setFavourite(id, true);
