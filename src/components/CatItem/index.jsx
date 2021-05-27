@@ -5,17 +5,20 @@ import {
 	Chip,
 	CircularProgress,
 } from '@material-ui/core';
-import IconButton from '@material-ui/core/IconButton';
-import FavoriteIcon from '@material-ui/icons/Favorite';
 import Card from '../Card/Card';
 import { makeStyles } from '@material-ui/core/styles';
-import { actionLoadCatPic, setFavourite } from '../../hooks/thecatapi';
+import {
+	actionLoadCatPic,
+	actionToggleFavourite,
+	setFavourite,
+} from '../../hooks/thecatapi';
 import GridContainer from '../Grid/GridContainer';
 import GridItem from '../Grid/GridItem';
 import CatVotePanel from '../ActionButtons/voteBtn';
 import { useContext } from 'react';
 import { StoreContext } from '../../hooks/store';
 import SpinningArrows from 'assets/img/Spinning_arrows.gif';
+import FavouriteBtn from '../ActionButtons/favouriteBtn';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -101,14 +104,13 @@ export default function CatItem({ image_id }) {
 				</GridContainer>
 			</CardContent>
 			<CardActions>
-				<IconButton
-					disabled={!id}
-					color={favourite ? 'primary' : undefined}
-					aria-label="add to favorites"
-					onClick={() => toggleFavourite()}
-				>
-					<FavoriteIcon />
-				</IconButton>
+				<FavouriteBtn
+					image_id={id}
+					set={favourite}
+					onClick={(newState) =>
+						actionToggleFavourite(dispatch, image_id, newState)
+					}
+				/>
 				<span />
 				<CatVotePanel score={score} image_id={id} />
 			</CardActions>

@@ -23,6 +23,7 @@ export const Actions = {
 	SAVE_VOTES: 'SAVE_VOTES',
 	SAVE_FAVOURITES: 'SAVE_FAVOURITES',
 	SAVE_UPLOADS: 'SAVE_UPLOADS',
+	SET_FAVOURITE: 'SET_FAVOURITE',
 };
 
 interface State {
@@ -102,6 +103,10 @@ const indexCats = (items: any[]): object =>
 				state,
 				indexCats(data.map((cat: CatI) => ({ ...cat, ownUpload: true })))
 			);
+			break;
+		case Actions.SET_FAVOURITE:
+			let { id, favourite } = data;
+			newState = { ...state, [id]: { ...(state[id] || {}), favourite } };
 			break;
 		default:
 			console.error(new Error().stack);

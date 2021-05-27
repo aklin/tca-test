@@ -27,12 +27,10 @@ const POST = {
 	headers: commonHeaders,
 };
 
-/*
-const DELETE={
+const DELETE = {
 	method: 'DELETE',
 	headers: commonHeaders,
-}
-*/
+};
 
 export interface AppSecret {
 	name: string;
@@ -77,7 +75,8 @@ export const actionLoadCatPics = async (
 ) => {
 	const request = await getSearchCatPics(limit);
 	if (!request.ok) {
-		console.error(`Request failed loadSearchCatPics`);
+		console.error(`Request failed actionLoadCatPics`);
+		return;
 	}
 
 	dispatch({ type: Actions.SAVE_CATS, data: await request.json() });
@@ -88,7 +87,8 @@ export const actionLoadCatPics = async (
 export const actionLoadCatPic = async (dispatch: Dispatch<any>, id: string) => {
 	const request = await getCatById(id);
 	if (!request.ok) {
-		console.error(`Request failed loadSearchCatPic`);
+		console.error(`Request failed actionLoadCatPic`);
+		return;
 	}
 
 	dispatch({ type: Actions.SAVE_CATS, data: [await request.json()] });
@@ -98,17 +98,33 @@ export const actionLoadCatPic = async (dispatch: Dispatch<any>, id: string) => {
 export const actionLoadFavourites = async (dispatch: Dispatch<any>) => {
 	const request = await getFavouriteCatPics();
 	if (!request.ok) {
-		console.error(`Request failed loadSearchCatPic`);
+		console.error(`Request failed actionLoadFavourites`);
+		return;
 	}
 
 	dispatch({ type: Actions.SAVE_FAVOURITES, data: await request.json() });
 	return request.headers.get('Pagination-Count');
 };
 
+export const actionToggleFavourite = async (
+	dispatch: Dispatch<any>,
+	id: string,
+	set = false
+) => {
+	const request = await (set ? setFavourite(id) : unsetFavourite(id));
+	if (!request.ok) {
+		console.error(`Request failed actionSetFavourite`);
+		return;
+	}
+
+	dispatch({ type: Actions.SET_FAVOURITE, data: { id, favourite: set } });
+};
+
 export const actionLoadOwnUploads = async (dispatch: Dispatch<any>) => {
 	const request = await getMyCatPics();
 	if (!request.ok) {
-		console.error(`Request failed loadSearchCatPic`);
+		console.error(`Request failed actionLoadOwnUploads`);
+		return;
 	}
 
 	dispatch({ type: Actions.SAVE_UPLOADS, data: await request.json() });
@@ -119,6 +135,7 @@ export const actionLoadVotes = async (dispatch: Dispatch<any>) => {
 	const request = await getMyVotes();
 	if (!request.ok) {
 		console.error(`Request failed loadSearchCatPic`);
+		return;
 	}
 
 	const votes: VoteI[] = await request.json();
@@ -170,11 +187,11 @@ const getSearchCatPics = async (limit = 16) =>
 export const getFavouriteCatPics = async () =>
 	await fetch(`${url}/favourites`, GET);
 
-export const setFavourite = async (id: string, favourite: boolean) => {
-	// const method = favourite ? 'POST' : 'DELETE';
+export const unsetFavourite = async (id: string) =>
+	await fetch(`${url}/favourites/${id}`, DELETE);
 
-	return await fetch(`${url}/favourites/`, {
+export const setFavourite = async (id: string) =>
+	await fetch(`${url}/favourites/`, {
 		...POST,
 		body: JSON.stringify({ image_id: id }),
 	});
-};
