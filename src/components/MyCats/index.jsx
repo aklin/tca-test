@@ -16,8 +16,6 @@ export default function MyCats() {
 		actionLoadOwnUploads(dispatch).then((t) => setTotal(t));
 	}, []);
 
-	console.log();
-
 	return !ids.length ? (
 		<CircularProgress size={64} />
 	) : (

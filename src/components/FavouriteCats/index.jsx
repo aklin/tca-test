@@ -1,16 +1,19 @@
-import { getFavouriteCatPics } from '../../hooks/thecatapi';
+import { actionLoadFavourites } from '../../hooks/thecatapi';
 import CatGrid from '../CatGrid';
-import useCats from '../../hooks/cathook';
+import { useContext, useEffect, useState } from 'react';
+import { StoreContext } from '../../hooks/store';
 
 export default function FavouriteCats() {
-	const { items, totalItems, loading } = useCats(getFavouriteCatPics);
+	const { state, dispatch } = useContext(StoreContext);
+	const [total, setTotal] = useState(0);
+	const ids = Object.keys(state)
+		.map((id) => ({ id, favourite: state[id].favourite }))
+		.filter(({ favourite }) => favourite)
+		.map(({ id }) => id);
 
-	return (
-		<CatGrid
-			items={items}
-			total={totalItems}
-			loading={loading}
-			itemProps={{ isFavourite: true }}
-		/>
-	);
+	useEffect(() => {
+		actionLoadFavourites(dispatch).then((t) => setTotal(t));
+	}, []);
+
+	return <CatGrid image_ids={ids} total={total} />;
 }

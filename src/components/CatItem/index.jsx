@@ -37,14 +37,10 @@ export default function CatItem({ image_id }) {
 
 	!image_id && new Error('Missing image_id');
 
-	!item && actionLoadCatPic(dispatch, image_id);
-
-	/*
 	console.group(`CatItem ${image_id}`);
 	console.log(state);
 	console.log(item);
 	console.groupEnd();
-*/
 
 	const {
 		name,
@@ -54,9 +50,11 @@ export default function CatItem({ image_id }) {
 		width,
 		categories = [],
 		breeds = [],
-		isFavourite = false,
+		favourite = false,
 		score = 0,
 	} = item || {};
+
+	!url && actionLoadCatPic(dispatch, image_id);
 
 	const toggleFavourite = async () => {
 		await setFavourite(id, true);
@@ -105,7 +103,7 @@ export default function CatItem({ image_id }) {
 			<CardActions>
 				<IconButton
 					disabled={!id}
-					color={isFavourite ? 'primary' : undefined}
+					color={favourite ? 'primary' : undefined}
 					aria-label="add to favorites"
 					onClick={() => toggleFavourite()}
 				>
