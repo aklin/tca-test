@@ -13,6 +13,7 @@ import { InputAdornment } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary';
 import { postPicture } from '../../hooks/thecatapi';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
 	input: {
@@ -27,6 +28,7 @@ const dim = {
 };
 
 export default function UploadView() {
+	const history = useHistory();
 	const classes = useStyles();
 	const [form, setForm] = useState({});
 
@@ -42,6 +44,7 @@ width: 1280
 		 */
 		try {
 			await postPicture(form);
+			history.push('/');
 		} finally {
 			// setBlocked(false);
 		}
@@ -80,6 +83,7 @@ width: 1280
 							/>
 							<CustomInput
 								labelText={'Selected file'}
+								labelProps={{ shrink: !!form.file }}
 								value={(form.file || {}).name}
 								inputProps={{
 									disabled: true,
