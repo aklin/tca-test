@@ -6,12 +6,15 @@ Desktop view
 Responsive view
 ![Responsive view](.README.MD/cats_responsive.PNG)
 
+This is to be evaluated as a Proof of Concept.
+
 The UI is Creative Tim's excellent [Dashboard UI][ctui]. When evaluating the
 submission please focus on the following files:
 
 ## Building the Project
 
 1. Check out this repo
+1. Set an API key for `thecatapi.com` in [`/src/secrets.js`](/src/secrets.js)
 1. Run `yarn`
 1. Run `yarn run start`
 1. Open `http://localhost:3000`
@@ -33,7 +36,7 @@ _Views_
 - `src/views/UploadView` - Upload view. Corresponds to `/upload`
 - `src/views/Dashboard` - Everything else. Corresponds to `/`
 
-The code is split in two main views: The Dashboard and the Upload page.
+The code is split in two main views: The Dashboard, and the Upload page.
 
 The **Dashboard** view uses a tabbed component to focus on four areas of
 interest:
@@ -48,7 +51,7 @@ endpoint.
 
 ## State Consolidation
 
-This app is entirely state-driven using React's `useReducer`. There are no stray
+The app is entirely state-driven using React's `useReducer`. There are no stray
 API calls.
 
 This is done by using _action_ functions that can be found in `thecatapi.tsx`,
@@ -93,28 +96,9 @@ IDs onto `CatGrid`.
 I omitted pagination in the interest of time. The natural place for it would be
 the `CatGrid` component.
 
-### Removing the API key from frontend
-
-The API key to `thecatsapi.com` is assigned to the app. In a real-world deployment
-this API key would not be accessible or usable from the frontend directly, but
-hidden behind a backend wrapper.
-
-### Protecting the API key in the repo
-
-The API key is currently committed to the repo. In a real-world deployment it would
-be a secret injected by the CI.
-
-### Error display
-
-At this time the UI does not display errors of any kind. To address this, one
-can use a special store item named `\t_error`. The `\t` prefix is significant
-because it is not a valid character for URIs, and will therefore never be
-encountered in the wild.
-
 ## Known Issues
 
 - The _Favourite_ button does not appear set when an item has been made favourite
 - No error display when unsetting a _Favourite_ cat
-- _Upload_ view does not go back to _/_ after uploading an image
 
 [ctui]: https://www.creative-tim.com/product/material-dashboard-react
