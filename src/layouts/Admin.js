@@ -16,6 +16,8 @@ import styles from 'assets/jss/material-dashboard-react/layouts/adminStyle.js';
 
 import bgImage from 'assets/img/sidebar-2.jpg';
 import logo from 'assets/img/reactlogo.png';
+import useError from '../hooks/useError';
+import SnackbarContent from '../components/Snackbar/SnackbarContent';
 
 let ps;
 
@@ -40,6 +42,7 @@ const switchRoutes = (
 const useStyles = makeStyles(styles);
 
 export default function Admin({ ...rest }) {
+	const { errors, clearError } = useError();
 	// styles
 	const classes = useStyles();
 	// ref to help us initialize PerfectScrollbar on windows devices
@@ -93,7 +96,18 @@ export default function Admin({ ...rest }) {
 					{...rest}
 				/>
 				<div className={classes.content}>
-					<div className={classes.container}>{switchRoutes}</div>
+					<div className={classes.container}>
+						{errors.map(({ id, message, severity }) => (
+							<SnackbarContent
+								key={id}
+								color={severity}
+								message={message}
+								close
+								onClose={() => clearError(id)}
+							/>
+						))}
+						{switchRoutes}
+					</div>
 				</div>
 				<Footer />
 			</div>

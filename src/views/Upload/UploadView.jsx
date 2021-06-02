@@ -15,6 +15,8 @@ import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary';
 import { postPicture } from '../../hooks/thecatapi';
 import { useHistory } from 'react-router-dom';
 import useError from '../../hooks/useError';
+import { HourglassFull } from '@material-ui/icons';
+import { UIErrorSeverity } from '../../hooks/store';
 
 const useStyles = makeStyles((theme) => ({
 	input: {
@@ -33,36 +35,34 @@ export default function UploadView() {
 	const { setError } = useError();
 	const classes = useStyles();
 	const [form, setForm] = useState({});
+	const [inProgress, setInProgress] = useState(false);
 
 	const handleUpload = async () => {
-		/*
-		approved: 1
-height: 720
-id: "rYjZNfyyI"
-original_filename: "download.jpg"
-pending: 0
-url: "https://cdn2.thecatapi.com/images/rYjZNfyyI.jpg"
-width: 1280
-		 */
 		try {
+			setInProgress(true);
 			const response = await (await postPicture(form)).json();
 
 			if (response.approved) {
+				setError({
+					message: 'Your picture was upload successfully',
+					severity: UIErrorSeverity.success,
+				});
 				history.push('/');
 				return;
 			}
-			setError({ message: 'The uploaded picture was not approved' });
+			setError({ message: 'The selected picture was not approved' });
 		} catch (e) {
 			setError({ title: 'An exception occurred', message: e.message });
+			console.error(e);
 		} finally {
-			// setBlocked(false);
+			setInProgress(false);
 		}
 	};
 
 	return (
 		<div>
 			<Card>
-				<CardHeader color={'rose'}>
+				<CardHeader color={'info'}>
 					<h4>Upload a picture</h4>
 					<p>
 						Your picture will be visible in the <i>My Uploads</i> tab
@@ -114,14 +114,14 @@ width: 1280
 				<CardFooter>
 					<span />
 					<Button
-						disabled={!form.file}
+						disabled={!form.file || inProgress}
 						variant="contained"
 						color="primary"
 						component="span"
 						onClick={handleUpload}
 					>
-						<PublishIcon />
-						Upload
+						{inProgress ? <HourglassFull /> : <PublishIcon />}
+						{inProgress ? 'Uploading...' : 'Upload'}
 					</Button>
 				</CardFooter>
 			</Card>

@@ -12,9 +12,16 @@ import styles from 'assets/jss/material-dashboard-react/components/snackbarConte
 
 const useStyles = makeStyles(styles);
 
-export default function SnackbarContent(props) {
+export default function SnackbarContent({
+	message,
+	color,
+	close,
+	icon,
+	rtlActive,
+	onClose,
+	...props
+}) {
 	const classes = useStyles();
-	const { message, color, close, icon, rtlActive } = props;
 	var action = [];
 	const messageClasses = classNames({
 		[classes.iconMessage]: icon !== undefined,
@@ -26,6 +33,7 @@ export default function SnackbarContent(props) {
 				key="close"
 				aria-label="Close"
 				color="inherit"
+				onClick={onClose}
 			>
 				<Close className={classes.close} />
 			</IconButton>,

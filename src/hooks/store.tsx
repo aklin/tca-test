@@ -1,29 +1,43 @@
-import { createContext, Dispatch, useContext, useReducer } from 'react';
+import { createContext, Dispatch, useReducer } from 'react';
 import { CatI, FavouriteI, MergedCatI, VoteI } from './thecatapi';
 import deepmerge from 'deepmerge';
 
 const initialState = {};
 
 interface ContextI {
-	state?: any;
-	dispatch?: Dispatch<any>;
+	state: any;
+	dispatch: Dispatch<any>;
 }
 
-export const StoreContext = createContext<ContextI>({});
+export interface UIError {
+	id?: string;
+	title?: string;
+	message: string;
+	severity?: UIErrorSeverity;
+}
+
+export enum UIErrorSeverity {
+	info = 'info',
+	success = 'success',
+	warning = 'warning',
+	error = 'danger',
+}
+
+// @ts-ignore
+export const StoreContext = createContext<ContextI>();
 
 type ReducerActionName = string;
 
 export const Actions = {
-	/*	FETCH_BREEDS: 'FETCH_BREEDS',
-	FETCH_FAVOURITES: 'FETCH_FAVOURITES',
-	FETCH_VOTES: 'FETCH_VOTES',
-	FETCH_CATS: 'FETCH_CATS',
-	FETCH_CAT: 'FETCH_CAT',*/
+	//cat actions
 	SAVE_CATS: 'SAVE_CATS',
 	SAVE_VOTES: 'SAVE_VOTES',
 	SAVE_FAVOURITES: 'SAVE_FAVOURITES',
 	SAVE_UPLOADS: 'SAVE_UPLOADS',
 	SET_FAVOURITE: 'SET_FAVOURITE',
+	//error actions
+	PUSH_ERROR: 'PUSH_ERROR',
+	CLEAR_ERROR: 'CLEAR_ERROR',
 };
 
 interface State {
@@ -57,13 +71,30 @@ const indexCats = (items: any[]): object =>
 	state: State,
 	{ type, data }: ReducerAction
 ) => {
-	let request;
-	let newState = state;
+	let newState = {};
 
 	console.group(`-> Dispatch ${type}`);
 	console.log(data);
 
 	switch (type) {
+		case Actions.PUSH_ERROR:
+			let errid = `\terror_${Date.now()}`;
+			newState = {
+				...state,
+				[errid]: {
+					id: errid,
+					title: data.title,
+					message: data.message,
+					severity: data.severity || UIErrorSeverity.error,
+				},
+			};
+			break;
+
+		case Actions.CLEAR_ERROR:
+			delete state[data.id];
+			newState = { ...state };
+			break;
+
 		case Actions.SAVE_CATS:
 			console.log('indexCats');
 			console.log(indexCats(data));
