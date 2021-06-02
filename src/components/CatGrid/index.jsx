@@ -1,5 +1,5 @@
 import GridContainer from '../Grid/GridContainer';
-import { CircularProgress, Typography } from '@material-ui/core';
+import { LinearProgress, Typography } from '@material-ui/core';
 import GridItem from '../Grid/GridItem';
 import { Dimensions } from '../../util';
 import CatItem from '../CatItem';
@@ -13,8 +13,10 @@ export default function CatGrid({ total = 0, image_ids = [] }) {
 
 	return (
 		<>
-			{total && (
+			{total ? (
 				<Typography variant={'caption'}>Total entries: {total}</Typography>
+			) : (
+				<LinearProgress />
 			)}
 			<GridContainer>
 				{image_ids.map((image_id) => (
