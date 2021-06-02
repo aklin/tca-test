@@ -14,6 +14,7 @@ import IconButton from '@material-ui/core/IconButton';
 import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary';
 import { postPicture } from '../../hooks/thecatapi';
 import { useHistory } from 'react-router-dom';
+import useError from '../../hooks/useError';
 
 const useStyles = makeStyles((theme) => ({
 	input: {
@@ -29,6 +30,7 @@ const dim = {
 
 export default function UploadView() {
 	const history = useHistory();
+	const { setError } = useError();
 	const classes = useStyles();
 	const [form, setForm] = useState({});
 
@@ -43,8 +45,15 @@ url: "https://cdn2.thecatapi.com/images/rYjZNfyyI.jpg"
 width: 1280
 		 */
 		try {
-			await postPicture(form);
-			history.push('/');
+			const response = await (await postPicture(form)).json();
+
+			if (response.approved) {
+				history.push('/');
+				return;
+			}
+			setError({ message: 'The uploaded picture was not approved' });
+		} catch (e) {
+			setError({ title: 'An exception occurred', message: e.message });
 		} finally {
 			// setBlocked(false);
 		}

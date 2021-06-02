@@ -160,7 +160,7 @@ export const actionLoadVotes = async (dispatch: Dispatch<any>) => {
 	return request.headers.get('Pagination-Count');
 };
 
-export const getMyCatPics = async (page = 0, limit = 16) =>
+export const getMyCatPics = async (page = 0, limit = 16): Promise<Response> =>
 	await fetch(`${url}/images?page=${page}&limit=${limit}`, GET);
 
 export const getCatById = async (image_id: string) =>
@@ -175,7 +175,7 @@ export const postPicture = async (form: IUploadPicture) => {
 	form.name && formData.append('name', form.name);
 	formData.append('file', form.file, form.file.name);
 
-	await fetch(`${url}/images/upload`, {
+	return await fetch(`${url}/images/upload`, {
 		headers,
 		method: 'POST',
 		body: formData,
