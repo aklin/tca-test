@@ -13,7 +13,7 @@ export default function FavouriteCats() {
 
 	useEffect(() => {
 		actionLoadFavourites(dispatch).then((t) => setTotal(t));
-	}, []);
+	}, [dispatch]);
 
 	return <CatGrid image_ids={ids} total={total} />;
 }

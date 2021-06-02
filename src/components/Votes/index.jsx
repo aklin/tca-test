@@ -12,7 +12,7 @@ export default function Votes() {
 
 	useEffect(() => {
 		actionLoadVotes(dispatch);
-	}, []);
+	}, [dispatch]);
 
 	return <CatGrid image_ids={ids} total={ids.length} />;
 }

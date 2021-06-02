@@ -14,7 +14,7 @@ export default function MyCats() {
 
 	useEffect(() => {
 		actionLoadOwnUploads(dispatch).then((t) => setTotal(t));
-	}, []);
+	}, [dispatch]);
 
 	return !ids.length ? (
 		<CircularProgress size={64} />
